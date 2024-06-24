@@ -4,31 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Scraper</title>
+    <style>
+        body {
+            background-color: blue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid black;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: left;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Web Scraper</h1>
-    <button id="scrapeButton">Scrape Data</button>
-    <div id="output"></div>
+    <div class="container">
+        <h1>Web Scraper</h1>
+        <input type="text" id="urlInput" placeholder="Введіть URL сайту" />
+        <button id="scrapeButton">Scrape Data</button>
+        <div id="output"></div>
+    </div>
 
     <script>
         document.getElementById('scrapeButton').addEventListener('click', () => {
-            const url = 'https://example.com';
+            const url = document.getElementById('urlInput').value;
             
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
-                    // Парсимо HTML з допомогою DOMParser
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
 
-                    // Знаходимо потрібні елементи (наприклад, всі заголовки h1)
-                    const headers = doc.querySelectorAll('h1');
                     const output = document.getElementById('output');
-                    
+                    output.innerHTML = '';
+
+                    // Парсимо заголовки (h1, h2, h3)
+                    const headers = doc.querySelectorAll('h1, h2, h3');
                     headers.forEach(header => {
                         const div = document.createElement('div');
                         div.textContent = header.textContent;
                         output.appendChild(div);
+                    });
+
+                    // Парсимо текстові елементи (p)
+                    const paragraphs = doc.querySelectorAll('p');
+                    paragraphs.forEach(paragraph => {
+                        const div = document.createElement('div');
+                        div.textContent = paragraph.textContent;
+                        output.appendChild(div);
+                    });
+
+                    // Парсимо зображення (img)
+                    const images = doc.querySelectorAll('img');
+                    images.forEach(img => {
+                        const image = document.createElement('img');
+                        image.src = img.src;
+                        output.appendChild(image);
                     });
                 })
                 .catch(err => {
