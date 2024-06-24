@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper</title>
+</head>
+<body>
+    <h1>Web Scraper</h1>
+    <button id="scrapeButton">Scrape Data</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('scrapeButton').addEventListener('click', () => {
+            const url = 'https://example.com';
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Парсимо HTML з допомогою DOMParser
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Знаходимо потрібні елементи (наприклад, всі заголовки h1)
+                    const headers = doc.querySelectorAll('h1');
+                    const output = document.getElementById('output');
+                    
+                    headers.forEach(header => {
+                        const div = document.createElement('div');
+                        div.textContent = header.textContent;
+                        output.appendChild(div);
+                    });
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+        });
+    </script>
+</body>
+</html>
