@@ -50,7 +50,7 @@
 <body>
     <div class="container">
         <h1>Web Scraper</h1>
-        <input type="text" id="urlInput" placeholder="Введіть URL сайту" />
+        <input type="text" id="urlInput" value="https://ieu.edu.ua/pro-mieu/novyny-ta-podii/v-taemo-prezidenta-meu-navolok-nu-allu-serg-jivnu-z-otrimannyam-pochesnoji-v-dznaki" />
         <button id="scrapeButton">Scrape Data</button>
     </div>
     <div id="outputContainer">
@@ -61,13 +61,10 @@
     <script>
         document.getElementById('scrapeButton').addEventListener('click', () => {
             const url = document.getElementById('urlInput').value;
-            
-            // Додамо перевірку для додавання 'http://' якщо не вказано 'http://' або 'https://'
-            const formattedUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url;
 
             // Використовуємо проксі-сервіс для обходу CORS
             const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = proxyUrl + formattedUrl;
+            const targetUrl = proxyUrl + url;
 
             fetch(targetUrl)
                 .then(response => response.text())
