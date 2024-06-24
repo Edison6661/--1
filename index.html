@@ -8,17 +8,19 @@
         body {
             background-color: blue;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            color: white;
         }
         .container {
             background-color: white;
             padding: 20px;
             border: 1px solid black;
             text-align: center;
+            margin-top: 20px;
         }
         input[type="text"] {
             width: 80%;
@@ -30,9 +32,14 @@
             padding: 10px 20px;
             font-size: 16px;
         }
-        #output {
+        #outputContainer {
+            background-color: white;
+            border: 1px solid black;
             margin-top: 20px;
-            text-align: left;
+            padding: 20px;
+            width: 80%;
+            max-height: 50%;
+            overflow-y: auto;
         }
         img {
             max-width: 100%;
@@ -45,6 +52,9 @@
         <h1>Web Scraper</h1>
         <input type="text" id="urlInput" placeholder="Введіть URL сайту" />
         <button id="scrapeButton">Scrape Data</button>
+    </div>
+    <div id="outputContainer">
+        <h2>Результати парсингу:</h2>
         <div id="output"></div>
     </div>
 
@@ -52,7 +62,10 @@
         document.getElementById('scrapeButton').addEventListener('click', () => {
             const url = document.getElementById('urlInput').value;
             
-            fetch(url)
+            // Додамо перевірку для додавання 'http://' якщо не вказано 'http://' або 'https://'
+            const formattedUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url;
+            
+            fetch(formattedUrl)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
