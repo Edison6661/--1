@@ -41,20 +41,16 @@
             max-height: 50%;
             overflow-y: auto;
         }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Web Scraper</h1>
-        <input type="text" id="urlInput" value="https://ieu.edu.ua/pro-mieu/novyny-ta-podii/v-taemo-prezidenta-meu-navolok-nu-allu-serg-jivnu-z-otrimannyam-pochesnoji-v-dznaki" />
+        <input type="text" id="urlInput" placeholder="Enter URL" />
         <button id="scrapeButton">Scrape Data</button>
     </div>
     <div id="outputContainer">
-        <h2>Результати парсингу:</h2>
+        <h2>Scraped Content:</h2>
         <div id="output"></div>
     </div>
 
@@ -68,27 +64,11 @@
                     const output = document.getElementById('output');
                     output.innerHTML = '';
 
-                    if (data.headers) {
-                        data.headers.forEach(header => {
+                    if (data.results) {
+                        data.results.forEach(result => {
                             const div = document.createElement('div');
-                            div.textContent = header;
+                            div.innerHTML = result;
                             output.appendChild(div);
-                        });
-                    }
-
-                    if (data.paragraphs) {
-                        data.paragraphs.forEach(paragraph => {
-                            const div = document.createElement('div');
-                            div.textContent = paragraph;
-                            output.appendChild(div);
-                        });
-                    }
-
-                    if (data.images) {
-                        data.images.forEach(src => {
-                            const img = document.createElement('img');
-                            img.src = src;
-                            output.appendChild(img);
                         });
                     }
                 })
