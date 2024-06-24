@@ -62,42 +62,35 @@
         document.getElementById('scrapeButton').addEventListener('click', () => {
             const url = document.getElementById('urlInput').value;
 
-            // Використовуємо проксі-сервіс для обходу CORS
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = proxyUrl + url;
-
-            fetch(targetUrl)
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-
+            fetch(`http://localhost:3000/scrape?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
                     const output = document.getElementById('output');
                     output.innerHTML = '';
 
-                    // Парсимо заголовки (h1, h2, h3)
-                    const headers = doc.querySelectorAll('h1, h2, h3');
-                    headers.forEach(header => {
-                        const div = document.createElement('div');
-                        div.textContent = header.textContent;
-                        output.appendChild(div);
-                    });
+                    if (data.headers) {
+                        data.headers.forEach(header => {
+                            const div = document.createElement('div');
+                            div.textContent = header;
+                            output.appendChild(div);
+                        });
+                    }
 
-                    // Парсимо текстові елементи (p)
-                    const paragraphs = doc.querySelectorAll('p');
-                    paragraphs.forEach(paragraph => {
-                        const div = document.createElement('div');
-                        div.textContent = paragraph.textContent;
-                        output.appendChild(div);
-                    });
+                    if (data.paragraphs) {
+                        data.paragraphs.forEach(paragraph => {
+                            const div = document.createElement('div');
+                            div.textContent = paragraph;
+                            output.appendChild(div);
+                        });
+                    }
 
-                    // Парсимо зображення (img)
-                    const images = doc.querySelectorAll('img');
-                    images.forEach(img => {
-                        const image = document.createElement('img');
-                        image.src = img.src;
-                        output.appendChild(image);
-                    });
+                    if (data.images) {
+                        data.images.forEach(src => {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            output.appendChild(img);
+                        });
+                    }
                 })
                 .catch(err => {
                     console.error('Error:', err);
