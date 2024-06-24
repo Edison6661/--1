@@ -64,8 +64,12 @@
             
             // Додамо перевірку для додавання 'http://' якщо не вказано 'http://' або 'https://'
             const formattedUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url;
-            
-            fetch(formattedUrl)
+
+            // Використовуємо проксі-сервіс для обходу CORS
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const targetUrl = proxyUrl + formattedUrl;
+
+            fetch(targetUrl)
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
